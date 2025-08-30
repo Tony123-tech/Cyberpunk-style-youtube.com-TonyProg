@@ -1,0 +1,196 @@
+(defn youtube-search 
+  "Search for videos on YouTube with optional parameters"
+  ([query] (youtube-search query {}))
+  ([query opts]
+   (let [api-key (System/getenv "YOUTUBE_API_KEY")
+         params (merge {:part "snippet"
+                       :type "video"
+                       :q query
+                       :maxResults 25
+                       :key api-key} opts)
+         url (str "https://www.googleapis.com/youtube/v3/search?" 
+                  (clojure.string/join "&" 
+                    (map #(str (name (key %)) "=" (val %)) params)))]
+     (-> url
+         (http/get)
+         :body
+         (json/parse-string true)))))
+
+(defn get-video-details 
+  "Get detailed information about specific videos"
+  [video-ids]
+  (let [api-key (System/getenv "YOUTUBE_API_KEY")
+        ids (if (string? video-ids) video-ids (clojure.string/join "," video-ids))
+        url (str "https://www.googleapis.com/youtube/v3/videos"
+                 "?part=snippet,statistics,contentDetails&id=" ids
+                 "&key=" api-key)]
+    (-> url
+        (http/get)
+        :body
+        (json/parse-string true))))
+
+(defn get-channel-info 
+  "Get information about YouTube channels"
+  [channel-ids]
+  (let [api-key (System/getenv "YOUTUBE_API_KEY")
+        ids (if (string? channel-ids) channel-ids (clojure.string/join "," channel-ids))
+        url (str "https://www.googleapis.com/youtube/v3/channels"
+                 "?part=snippet,statistics,brandingSettings&id=" ids
+                 "&key=" api-key)]
+    (-> url
+        (http/get)
+        :body
+        (json/parse-string true))))
+
+(defn get-video-comments 
+  "Get comments for a specific video with pagination support"
+  ([video-id] (get-video-comments video-id nil))
+  ([video-id page-token]
+   (let [api-key (System/getenv "YOUTUBE_API_KEY")
+         base-url (str "https://www.googleapis.com/youtube/v3/commentThreads"
+                      "?part=snippet,replies&videoId=" video-id
+                      "&maxResults=100&order=relevance&key=" api-key)
+         url (if page-token 
+               (str base-url "&pageToken=" page-token)
+               base-url)]
+     (-> url
+         (http/get)
+         :body
+         (json/parse-string true)))))
+
+(defn search-channels 
+  "Search for YouTube channels with filtering options"
+  ([query] (search-channels query {}))
+  ([query opts]
+   (let [api-key (System/getenv "YOUTUBE_API_KEY")
+         params (merge {:part "snippet"
+                       :type "channel"
+                       :q query
+                       :maxResults 25
+                       :key api-key} opts)
+         url (str "https://www.googleapis.com/youtube/v3/search?" 
+                  (clojure.string/join "&" 
+                    (map #(str (name (key %)) "=" (val %)) params)))]
+     (-> url
+         (http/get)
+         :body
+         (json/parse-string true)))))
+
+(defn get-trending-videos 
+  "Get trending videos for a specific region with category support"
+  ([region-code] (get-trending-videos region-code nil))
+  ([region-code category-id]
+   (let [api-key (System/getenv "YOUTUBE_API_KEY")
+         base-url (str "https://www.googleapis.com/youtube/v3/videos"
+                      "?part=snippet,statistics,contentDetails&chart=mostPopular"
+                      "&maxResults=50&regionCode=" region-code
+                      "&key=" api-key)
+         url (if category-id 
+               (str base-url "&videoCategoryId=" category-id)
+               base-url)]
+     (-> url
+         (http/get)
+         :body
+         (json/parse-string true)))))
+
+(defn get-channel-videos 
+  "Get videos from a specific channel"
+  ([channel-id] (get-channel-videos channel-id nil))
+  ([channel-id page-token]
+   (let [api-key (System/getenv "YOUTUBE_API_KEY")
+         base-url (str "https://www.googleapis.com/youtube/v3/search"
+                      "?part=snippet&channelId=" channel-id
+                      "&type=video&order=date&maxResults=50&key=" api-key)
+         url (if page-token 
+               (str base-url "&pageToken=" page-token)
+               base-url)]
+     (-> url
+         (http/get)
+         :body
+         (json/parse-string true)))))
+
+(defn get-video-categories 
+  "Get available video categories for a region"
+  [region-code]
+  (let [api-key (System/getenv "YOUTUBE_API_KEY")
+        url (str "https://www.googleapis.com/youtube/v3/videoCategories"
+                 "?part=snippet&regionCode=" region-code
+                 "&key=" api-key)]
+    (-> url
+        (http/get)
+        :body
+        (json/parse-string true))))
+
+(defn create-playlist 
+  "Create a new YouTube playlist with metadata"
+  [title description & {:keys [privacy tags] :or {privacy "private" tags []}}]
+  {:id (str (java.util.UUID/randomUUID))
+   :title title
+   :description description
+   :privacy privacy
+   :tags tags
+   :videos []
+   :created-at (java.time.Instant/now)
+   :updated-at (java.time.Instant/now)})
+
+(defn add-to-playlist 
+  "Add a video to a playlist with position support"
+  ([playlist video-id] (add-to-playlist playlist video-id nil))
+  ([playlist video-id position]
+   (let [videos (:videos playlist)
+         new-videos (if position
+                      (let [[before after] (split-at position videos)]
+                        (concat before [video-id] after))
+                      (conj videos video-id))]
+     (-> playlist
+         (assoc :videos new-videos)
+         (assoc :updated-at (java.time.Instant/now))))))
+
+(defn remove-from-playlist 
+  "Remove a video from a playlist by ID or position"
+  [playlist video-id-or-pos]
+  (let [videos (:videos playlist)
+        new-videos (if (number? video-id-or-pos)
+                     (let [pos video-id-or-pos]
+                       (concat (take pos videos) (drop (inc pos) videos)))
+                     (remove #{video-id-or-pos} videos))]
+    (-> playlist
+        (assoc :videos new-videos)
+        (assoc :updated-at (java.time.Instant/now)))))
+
+(defn get-playlist-videos 
+  "Get all video IDs from a playlist"
+  [playlist]
+  (:videos playlist))
+
+(defn playlist-duration 
+  "Calculate total duration of videos in playlist (requires video details)"
+  [playlist]
+  (let [video-ids (:videos playlist)]
+    (when (seq video-ids)
+      (let [video-details (get-video-details video-ids)
+            durations (map #(get-in % [:contentDetails :duration]) 
+                          (get-in video-details [:items]))]
+        (reduce + (map parse-duration durations))))))
+
+(defn parse-duration 
+  "Parse YouTube duration format (PT1H2M3S) to seconds"
+  [duration-str]
+  (if (string? duration-str)
+    (let [pattern #"PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?"
+          [_ hours minutes seconds] (re-find pattern duration-str)]
+      (+ (* (Integer/parseInt (or hours "0")) 3600)
+         (* (Integer/parseInt (or minutes "0")) 60)
+         (Integer/parseInt (or seconds "0"))))
+    0))
+
+(defn format-duration 
+  "Format seconds to human-readable duration"
+  [seconds]
+  (let [hours (quot seconds 3600)
+        minutes (quot (rem seconds 3600) 60)
+        secs (rem seconds 60)]
+    (cond
+      (> hours 0) (format "%d:%02d:%02d" hours minutes secs)
+      (> minutes 0) (format "%d:%02d" minutes secs)
+      :else (str secs "s"))))
