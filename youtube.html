@@ -1,25 +1,362 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Day #01 - CyberTube | TonyProg </title>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap"rel="stylesheet">
-<link rel="stylesheet" href="cyberpunk-youtube-youtube.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day #01 - Youtube.com | TonyProg </title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="cyberpunk-youtube.css">
 </head>
 <body>
-<!-- Header -->
-<header class="cyber-header">
-<div class="header-left">
-<button class="menu-btn cyber-btn">
-<span></span>
-<span></span>
-<span></span>
-</button>
-<div class="logo">
-<img src="a_futuristic_cyber_image_.jpeg" alt="CyberTube Logo" class="logo-image">
-<span class="yber-text glitch" data-text="CYBERTUBE">CYBERTUBE</span>
-</div>
-</div>
+    <!-- Header -->
+    <header class="cyber-header">
+        <div class="header-left">
+            <button class="menu-btn cyber-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <div class="logo">
+                <img src="a_futuristic_cyber_image_.jpeg" alt="CyberTube Logo" class="logo-image">
+                <span class="yber-text glitch" data-text="CYBERTUBE">YOUTUBE</span>
+            </div>
+        </div>
+        
+        <div class="search-container">
+            <input type="text" class="cyber-search" placeholder="SEARCH THE MATRIX..." />
+            <button class="search-btn cyber-btn">
+                <span class="search-icon">🔍</span>
+            </button>
+        </div>
+        
+        <div class="header-right">
+            <button class="cyber-btn icon-btn" id="aiAssistantBtn">🤖</button>
+            <button class="cyber-btn icon-btn">📹</button>
+            <button class="cyber-btn icon-btn">🔔</button>
+            <button class="cyber-btn login-btn" id="loginBtn">LOGIN</button>
+            <div class="user-avatar cyber-avatar" id="userAvatar" style="display: none;">U</div>
+        </div>
+    </header>
 
+    <!-- Sidebar -->
+    <nav class="cyber-sidebar">
+        <div class="nav-section">
+            <a href="#" class="nav-item active">
+                <span class="nav-icon">🏠</span>
+                <span class="nav-text">HOME</span>
+            </a>
+            <a href="#" class="nav-item">
+                <span class="nav-icon">🔥</span>
+                <span class="nav-text">TRENDING</span>
+            </a>
+            <a href="#" class="nav-item">
+                <span class="nav-icon">📺</span>
+                <span class="nav-text">SUBSCRIPTIONS</span>
+            </a>
+        </div>
+        
+        <div class="nav-divider"></div>
+        
+        <div class="nav-section">
+            <a href="#" class="nav-item">
+                <span class="nav-icon">📚</span>
+                <span class="nav-text">LIBRARY</span>
+            </a>
+            <a href="#" class="nav-item">
+                <span class="nav-icon">📜</span>
+                <span class="nav-text">HISTORY</span>
+            </a>
+            <a href="#" class="nav-item">
+                <span class="nav-icon">⏰</span>
+                <span class="nav-text">WATCH LATER</span>
+            </a>
+            <a href="#" class="nav-item" id="aiRecommendations">
+                <span class="nav-icon">🧠</span>
+                <span class="nav-text">AI RECOMMENDATIONS</span>
+            </a>
+        </div>
+    </nav>
 
+    <!-- Main Content -->
+    <main class="cyber-main">
+        <div class="video-grid">
+            <!-- Cyberpunk Video Collection -->
+            <div class="video-card" data-video-id="bigbuck" data-video-src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4">
+                <div class="video-thumbnail">
+                    <img src="a_futuristic_cyber_image_.jpeg" alt="Big Buck Bunny" class="thumbnail-image">
+                    <div class="video-duration">9:56</div>
+                    <div class="play-overlay">
+                        <button class="play-btn">▶</button>
+                    </div>
+                </div>
+                <div class="video-info">
+                    <h3 class="video-title">Big Buck Bunny - Neural Enhanced</h3>
+                    <div class="channel-info">
+                        <span class="channel-name">CyberTube Studios</span>
+                        <span class="video-stats">12.5M views • 1 day ago</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="video-card" data-video-id="elephant" data-video-src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4">
+                <div class="video-thumbnail">
+                    <img src="space ship.jpg" alt="Elephants Dream" class="thumbnail-image">
+                    <div class="video-duration">10:53</div>
+                    <div class="play-overlay">
+                        <button class="play-btn">▶</button>
+                    </div>
+                </div>
+                <div class="video-info">
+                    <h3 class="video-title">Elephants Dream - Cyberpunk Edition</h3>
+                    <div class="channel-info">
+                        <span class="channel-name">Neural Cinema</span>
+                        <span class="video-stats">8.2M views • 3 days ago</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="video-card" data-video-id="tears" data-video-src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4">
+                <div class="video-thumbnail">
+                    <img src="cyberpunk-youtube.css" alt="Tears of Steel" class="thumbnail-image">
+                    <div class="video-duration">12:14</div>
+                    <div class="play-overlay">
+                        <button class="play-btn">▶</button>
+                    </div>
+                </div>
+                <div class="video-info">
+                    <h3 class="video-title">Tears of Steel - Matrix Protocol</h3>
+                    <div class="channel-info">
+                        <span class="channel-name">TechNinja</span>
+                        <span class="video-stats">15.7M views • 2 days ago</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="video-card" data-video-id="sintel" data-video-src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4">
+                <div class="video-thumbnail">
+                    <img src="starry sky.jpg" alt="Sintel" class="thumbnail-image">
+                    <div class="video-duration">14:48</div>
+                    <div class="play-overlay">
+                        <button class="play-btn">▶</button>
+                    </div>
+                </div>
+                <div class="video-info">
+                    <h3 class="video-title">Sintel - Neural Network Adventure</h3>
+                    <div class="channel-info">
+                        <span class="channel-name">CyberDragon</span>
+                        <span class="video-stats">22.1M views • 1 week ago</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="video-card" data-video-id="sample1" data-video-src="https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4">
+                <div class="video-thumbnail">
+                    <img src="tunnel.jpg" alt="Sample Video" class="thumbnail-image">
+                    <div class="video-duration">0:30</div>
+                    <div class="play-overlay">
+                        <button class="play-btn">▶</button>
+                    </div>
+                </div>
+                <div class="video-info">
+                    <h3 class="video-title">Neural Interface Demo</h3>
+                    <div class="channel-info">
+                        <span class="channel-name">CyberLab</span>
+                        <span class="video-stats">3.4M views • 4 days ago</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="video-card" data-video-id="sample2" data-video-src="https://sample-videos.com/zip/10/mp4/SampleVideo_360x240_1mb.mp4">
+                <div class="video-thumbnail">
+                    <img src="mountain.jpg" alt="Sample Video 2" class="thumbnail-image">
+                    <div class="video-duration">0:13</div>
+                    <div class="play-overlay">
+                        <button class="play-btn">▶</button>
+                    </div>
+                </div>
+                <div class="video-info">
+                    <h3 class="video-title">Quantum Processing Test</h3>
+                    <div class="channel-info">
+                        <span class="channel-name">QuantumTech</span>
+                        <span class="video-stats">1.8M views • 6 days ago</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="video-card" data-video-id="forest" data-video-src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4">
+                <div class="video-thumbnail">
+                    <img src="cherry forest.jpg" alt="For Bigger Blazes" class="thumbnail-image">
+                    <div class="video-duration">0:15</div>
+                    <div class="play-overlay">
+                        <button class="play-btn">▶</button>
+                    </div>
+                </div>
+                <div class="video-info">
+                    <h3 class="video-title">For Bigger Blazes - Cyber Edition</h3>
+                    <div class="channel-info">
+                        <span class="channel-name">FireTech</span>
+                        <span class="video-stats">5.2M views • 2 weeks ago</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="video-card" data-video-id="escape" data-video-src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4">
+                <div class="video-thumbnail">
+                    <img src="sunset.jpg" alt="For Bigger Escapes" class="thumbnail-image">
+                    <div class="video-duration">0:15</div>
+                    <div class="play-overlay">
+                        <button class="play-btn">▶</button>
+                    </div>
+                </div>
+                <div class="video-info">
+                    <h3 class="video-title">For Bigger Escapes - Neural Journey</h3>
+                    <div class="channel-info">
+                        <span class="channel-name">EscapeTech</span>
+                        <span class="video-stats">7.9M views • 1 week ago</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Login/Signup Modal -->
+    <div class="auth-modal" id="authModal">
+        <div class="auth-container">
+            <div class="auth-header">
+                <h2 class="auth-title glitch" data-text="NEURAL ACCESS">NEURAL ACCESS</h2>
+                <button class="close-btn" id="closeModal">×</button>
+            </div>
+            
+            <div class="auth-tabs">
+                <button class="auth-tab active" id="loginTab">LOGIN</button>
+                <button class="auth-tab" id="signupTab">SIGN UP</button>
+            </div>
+            
+            <!-- Login Form -->
+            <div class="auth-form" id="loginForm">
+                <div class="form-group">
+                    <input type="email" class="cyber-input" placeholder="EMAIL ADDRESS" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" class="cyber-input" placeholder="PASSWORD" id="loginPassword" required>
+                </div>
+                <button class="cyber-btn auth-submit" id="loginSubmit">ACCESS GRANTED</button>
+                
+                <div class="auth-divider">
+                    <span>OR CONNECT VIA</span>
+                </div>
+                
+                <div class="social-login">
+                    <button class="social-btn google-btn" id="googleLogin">
+                        <span class="social-icon">G</span>
+                        GOOGLE
+                    </button>
+                    <button class="social-btn facebook-btn" id="facebookLogin">
+                        <span class="social-icon">f</span>
+                        FACEBOOK
+                    </button>
+                    <button class="social-btn discord-btn" id="discordLogin">
+                        <span class="social-icon">D</span>
+                        DISCORD
+                    </button>
+                    <button class="social-btn twitter-btn" id="twitterLogin">
+                        <span class="social-icon">𝕏</span>
+                        TWITTER
+                    </button>
+                    <button class="social-btn twitch-btn" id="twitchLogin">
+                        <span class="social-icon">T</span>
+                        TWITCH
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Signup Form -->
+            <div class="auth-form" id="signupForm" style="display: none;">
+                <div class="form-group">
+                    <input type="text" class="cyber-input" placeholder="USERNAME" id="signupUsername" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" class="cyber-input" placeholder="EMAIL ADDRESS" id="signupEmail" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" class="cyber-input" placeholder="PASSWORD" id="signupPassword" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" class="cyber-input" placeholder="CONFIRM PASSWORD" id="confirmPassword" required>
+                </div>
+                <button class="cyber-btn auth-submit" id="signupSubmit">CREATE ACCOUNT</button>
+                
+                <div class="auth-divider">
+                    <span>OR SIGN UP WITH</span>
+                </div>
+                
+                <div class="social-login">
+                    <button class="social-btn google-btn" id="googleSignup">
+                        <span class="social-icon">G</span>
+                        GOOGLE
+                    </button>
+                    <button class="social-btn facebook-btn" id="facebookSignup">
+                        <span class="social-icon">f</span>
+                        FACEBOOK
+                    </button>
+                    <button class="social-btn discord-btn" id="discordSignup">
+                        <span class="social-icon">D</span>
+                        DISCORD
+                    </button>
+                    <button class="social-btn twitter-btn" id="twitterSignup">
+                        <span class="social-icon">𝕏</span>
+                        TWITTER
+                    </button>
+                    <button class="social-btn twitch-btn" id="twitchSignup">
+                        <span class="social-icon">T</span>
+                        TWITCH
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Assistant Modal -->
+    <div class="chat-container">
+    <div id="chat-log"></div>
+    <input type="text" id="user-input" placeholder="Type your message here...">
+    <button onclick="sendMessage()">Send</button>
+    </div>
+    <div class="ai-modal" id="aiModal">
+        <div class="ai-container">
+            <div class="ai-header">
+                <h2 class="ai-title glitch" data-text="NEURAL AI">NEURAL AI</h2>
+                <button class="close-btn" id="closeAiModal">×</button>
+            </div>
+            
+            <div class="ai-chat-container">
+                <div class="ai-messages" id="aiMessages">
+                    <div class="ai-message system">
+                        <div class="message-content">
+                            <span class="ai-avatar">🤖</span>
+                            <div class="message-text">Neural AI Assistant activated. How can I enhance your CyberTube experience?</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="ai-input-container">
+                    <input type="text" class="ai-input" id="aiInput" placeholder="Ask AI anything...">
+                    <button class="ai-send-btn" id="aiSendBtn">🚀</button>
+                </div>
+                
+                <div class="ai-quick-actions">
+                    <button class="ai-quick-btn" data-action="recommend">🎯 Smart Recommendations</button>
+                    <button class="ai-quick-btn" data-action="search">🔍 AI Search</button>
+                    <button class="ai-quick-btn" data-action="coding">💻 Coding Help</button>
+                    <button class="ai-quick-btn" data-action="sports">⚽ Sports Content</button>
+                    <button class="ai-quick-btn" data-action="food">🍳 Food & Recipes</button>
+                    <button class="ai-quick-btn" data-action="create">✨ Create Playlist</button>
+                </div>
+            </div>
+        </div>
+    </div>
+<a href="Upload.html">Upload Video</a>
+    <script src="cyberpunk-youtube.js"></script>
+    <script type="module" src="dist/main.js"></script>
+</body>
+</html>
