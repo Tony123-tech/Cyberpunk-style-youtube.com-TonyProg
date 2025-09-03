@@ -1,17 +1,271 @@
 <!DOCTYPE html>
-<h2>Upload Video</h2>
-<form asp-action="Upload" method="post" enctype="multipart/form-data">
-<div>
-<label>Title</label>
-<input type="text" name="title" required />
-</div>
-<div>
-<label>Description</label>
-<textarea name="description"></textarea>
-</div>
-<div>
-<label>Video File</label>
-<input type="file" name="file" required />
-</div>
-<button type="submit">Upload</button>
-</form>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Uploader | TonyProg </title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            transition: background 0.5s, color 0.5s;
+        }
+        .cyberpunk-btn {
+            font-family: 'Orbitron', sans-serif;
+            background: linear-gradient(90deg, #fc00ff 0%, #00dbde 100%);
+            color: #fff;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 0 20px #00fff0, 0 0 40px #ff00cc;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 2px;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            outline: none;
+            transition: box-shadow 0.3s, transform 0.3s;
+        }
+        .cyberpunk-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 40px #0ff, 0 0 80px #f0f;
+        }
+        .fake-link {
+            color: #2563eb;
+            text-decoration: underline;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .fake-link:hover {
+            color: #7f1fff;
+        }
+        /* Hide default file input */
+        .file-input {
+            opacity: 0;
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+        /* Cyberpunk border for upload container */
+        .cyberpunk-border {
+            border: 2px solid #00fff0;
+            box-shadow: 0 0 20px #00fff0, 0 0 40px #ff00cc;
+            border-radius: 20px;
+            padding: 2rem;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        /* Animations */
+        @keyframes cyber-flicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        .flicker {
+            animation: cyber-flicker 1s infinite alternate;
+        }
+        /* Mode styles */
+        .mode-light {
+            background: linear-gradient(135deg, #f3f4f6 0%, #e0e7ff 100%);
+            color: #1a202c;
+        }
+        .mode-dark {
+            background: linear-gradient(135deg, #23272f 0%, #18181b 100%);
+            color: #e5e7eb;
+        }
+        .mode-cyberpunk {
+            background: linear-gradient(135deg, #2d0036 0%, #0e0e28 100%);
+            color: #00fff0;
+        }
+        .mode-cyberpunk h1, 
+        .mode-cyberpunk label,
+        .mode-cyberpunk .cyberpunk-btn,
+        .mode-cyberpunk .fake-link {
+            text-shadow: 0 0 8px #0ff, 0 0 16px #f0f;
+        }
+        .mode-cyberpunk .cyberpunk-border {
+            border-color: #fc00ff;
+            box-shadow: 0 0 20px #fc00ff, 0 0 40px #00dbde;
+        }
+        /* Hide video preview initially */
+        #videoPreview {
+            display: none;
+        }
+        /* MP4 option styling */
+        .mp4-options {
+            background: rgba(60, 0, 90, 0.15);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-top: 1rem;
+            box-shadow: 0 0 10px #00fff0a0;
+            transition: box-shadow 0.3s;
+        }
+        .mp4-checkbox:checked + label {
+            color: #fc00ff;
+            text-shadow: 0 0 8px #fc00ff;
+        }
+        .mp4-options label {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-left: 0.5rem;
+            transition: color 0.2s, text-shadow 0.2s;
+        }
+    </style>
+</head>
+<body class="mode-dark min-h-screen flex flex-col">
+    <header class="w-full py-5 px-6 flex justify-between items-center cyberpunk-border flicker" id="topBar" style="border-radius: 0 0 24px 24px;">
+        <h1 class="text-3xl font-orbitron font-bold tracking-wide flicker">Video Uploader</h1>
+        <nav class="flex space-x-4">
+            <button class="fake-link" onclick="setMode('cyberpunk')">Cyberpunk Mode</button>
+            <button class="fake-link" onclick="setMode('dark')">Dark Mode</button>
+            <button class="fake-link" onclick="setMode('light')">Light Mode</button>
+        </nav>
+    </header>
+    <main class="flex-grow flex flex-col justify-center items-center px-4 py-10">
+        <section class="w-full max-w-lg cyberpunk-border" id="uploadContainer">
+            <form id="videoForm" class="flex flex-col space-y-6">
+                <label for="videoInput" class="font-orbitron text-lg">Upload your video</label>
+                <div class="relative w-full">
+                    <button type="button" class="cyberpunk-btn w-full" id="fakeUploadBtn">
+                        <span id="uploadText">Choose File</span>
+                        <input type="file" accept="video/*" class="file-input" id="videoInput" />
+                    </button>
+                    <span id="fileName" class="block mt-2 text-sm text-gray-400"></span>
+                </div>
+                <div class="mp4-options flex flex-col space-y-2">
+                    <span class="font-orbitron text-md mb-2">MP4 Options</span>
+                    <div class="flex items-center">
+                        <input type="checkbox" id="convertMp4" class="mp4-checkbox accent-pink-500" />
+                        <label for="convertMp4">Convert to MP4 if not already</label>
+                    </div>
+                    <div class="flex items-center">
+                        <input type="checkbox" id="optimizeMp4" class="mp4-checkbox accent-cyan-500" />
+                        <label for="optimizeMp4">Optimize MP4 for streaming</label>
+                    </div>
+                    <div class="flex items-center">
+                        <input type="checkbox" id="compressMp4" class="mp4-checkbox accent-purple-500" />
+                        <label for="compressMp4">Compress MP4 file size</label>
+                    </div>
+                </div>
+                <div>
+                    <label for="videoType" class="font-orbitron text-md">Type</label>
+                    <select id="videoType" class="w-full mt-2 px-3 py-2 rounded-lg bg-gray-900 text-gray-100 border border-gray-700 focus:border-blue-500 transition">
+                        <option value="movie">Movie</option>
+                        <option value="music">Music Video</option>
+                        <option value="tutorial">Tutorial</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <button type="submit" class="cyberpunk-btn w-full">Upload</button>
+            </form>
+            <div id="uploadResult" class="mt-6 text-center"></div>
+            <div class="mt-6">
+                <video id="videoPreview" controls class="w-full rounded-xl shadow-lg"></video>
+            </div>
+        </section>
+    </main>
+    <footer class="w-full py-3 px-6 text-center text-sm cyberpunk-border flicker" style="border-radius: 24px 24px 0 0;">
+        &copy; 2024 Cyberpunk Video Uploader. All rights reserved.
+    </footer>
+    <script>
+        // Font setup
+        document.querySelectorAll('h1, label, .font-orbitron').forEach(el => {
+            el.style.fontFamily = "'Orbitron', 'Roboto', Arial, sans-serif";
+        });
+
+        // Mode switching
+        function setMode(mode) {
+            const body = document.body;
+            body.classList.remove('mode-light', 'mode-dark', 'mode-cyberpunk');
+            body.classList.add('mode-' + mode);
+
+            // Cyberpunk borders
+            const borders = document.querySelectorAll('.cyberpunk-border');
+            borders.forEach(el => {
+                if (mode === 'cyberpunk') {
+                    el.classList.add('flicker');
+                } else {
+                    el.classList.remove('flicker');
+                }
+            });
+
+            // Video type select styling
+            const typeSelect = document.getElementById('videoType');
+            if (mode === 'light') {
+                typeSelect.classList.remove('bg-gray-900', 'text-gray-100', 'border-gray-700');
+                typeSelect.classList.add('bg-gray-100', 'text-gray-900', 'border-gray-300');
+            } else {
+                typeSelect.classList.add('bg-gray-900', 'text-gray-100', 'border-gray-700');
+                typeSelect.classList.remove('bg-gray-100', 'text-gray-900', 'border-gray-300');
+            }
+        }
+
+        // File input handling
+        const videoInput = document.getElementById('videoInput');
+        const fakeUploadBtn = document.getElementById('fakeUploadBtn');
+        const fileName = document.getElementById('fileName');
+        const videoPreview = document.getElementById('videoPreview');
+        const uploadText = document.getElementById('uploadText');
+
+        fakeUploadBtn.addEventListener('click', () => {
+            videoInput.click();
+        });
+
+        videoInput.addEventListener('change', function() {
+            if (videoInput.files.length > 0) {
+                const file = videoInput.files[0];
+                fileName.textContent = file.name;
+                uploadText.textContent = "Change File";
+                // Preview video
+                const url = URL.createObjectURL(file);
+                videoPreview.src = url;
+                videoPreview.style.display = 'block';
+            } else {
+                fileName.textContent = '';
+                uploadText.textContent = "Choose File";
+                videoPreview.style.display = 'none';
+            }
+        });
+
+        // Simulate upload
+        document.getElementById('videoForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const result = document.getElementById('uploadResult');
+            if (videoInput.files.length === 0) {
+                result.innerHTML = "<span class='text-red-500'>Please select a video file to upload!</span>";
+                return;
+            }
+            // MP4 options
+            const convert = document.getElementById('convertMp4').checked;
+            const optimize = document.getElementById('optimizeMp4').checked;
+            const compress = document.getElementById('compressMp4').checked;
+            let mp4Msg = [];
+            if (convert) mp4Msg.push("Convert to MP4");
+            if (optimize) mp4Msg.push("Optimize for streaming");
+            if (compress) mp4Msg.push("Compress file size");
+            let optionsText = mp4Msg.length > 0 ? "<br><span class='text-pink-500'>MP4 Options: <strong>" + mp4Msg.join(", ") + "</strong></span>" : "";
+
+            result.innerHTML = "<span class='text-green-500'>Video uploaded (simulated)! Type: <strong>" + document.getElementById('videoType').value + "</strong></span>" + optionsText;
+        });
+
+        // Responsive fix for flicker animation on mobile
+        function handleResize() {
+            if (window.innerWidth < 640) {
+                document.querySelectorAll('.flicker').forEach(el => el.classList.remove('flicker'));
+            } else {
+                if (document.body.classList.contains('mode-cyberpunk')) {
+                    document.querySelectorAll('.cyberpunk-border').forEach(el => el.classList.add('flicker'));
+                }
+            }
+        }
+        window.addEventListener('resize', handleResize);
+
+        // Initial mode
+        setMode('dark');
+    </script>
+</body>
+</html>
