@@ -1,0 +1,5 @@
+--- original.txt
++++ updated.txt
+@@ -1, +1,3 @@
+-The quick brown fox
++jumps over the lazy dog
